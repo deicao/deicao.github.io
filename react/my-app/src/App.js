@@ -1,37 +1,112 @@
 import React, {
   Component
 } from 'react';
-import {
-  HashRouter,
-  Route,
-  Link
-} from 'react-router-dom';
 import logo from './logo.svg';
-
-
-import Home from './components/Home';
-import Product from './components/Product';
-import About from './components/About';
+import {
+  Button,
+  Slider,
+  Carousel,
+  WingBlank,
+  WhiteSpace
+} from 'antd-mobile';
+import './App.less';
 
 class App extends Component {
+
+  state = {
+    data: ['1', '2', '3'],
+    imgHeight: 176,
+  }
+
+  componentDidMount() {
+    // simulate img loading
+    setTimeout(() => {
+      this.setState({
+        data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
+      });
+    }, 100);
+  }
+
+  log = (name) => {
+    return (value) => {
+      console.log(`${name}: ${value}`);
+    };
+  }
+
   render() {
     return (
-      <HashRouter>
-        <div>
-          <ul>
-            <li><Link to="/abc">家</Link></li>
-            <li><Link to="/abc1">产品</Link></li>
-            <li><Link to="/abc2">我们</Link></li>
-            <li><img src={logo} alt="Logo" /></li>
-          </ul>
-
-          <hr/>
-          
-          <Route path="/abc" component={Home}/>
-          <Route path="/abc1" component={Product}/>
-          <Route path="/abc2" component={About}/>
-        </div>
-      </HashRouter>
+      <div className="App">
+        <WingBlank></WingBlank>
+        <Carousel
+          autoplay={false}
+          infinite
+          beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
+          afterChange={index => console.log('slide to', index)}
+        >
+          {this.state.data.map(val => (
+            <a
+              key={val}
+              href="http://www.alipay.com"
+              style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
+            >
+              <img src={logo} className="App-logo" alt="logo" />
+              <h1 className="App-title">Welcome to React</h1>
+            </a>
+          ))}
+        </Carousel>
+        <Button>Start</Button>
+        <WhiteSpace size="lg" />
+        <WingBlank size="lg">
+          <p className="sub-title">Slider</p>
+          <Slider
+            style={{ marginLeft: 30, marginRight: 30 }}
+            defaultValue={26}
+            min={0}
+            max={30}
+            onChange={this.log('change')}
+            onAfterChange={this.log('afterChange')}
+          />
+        </WingBlank>
+        <WhiteSpace size="lg" />
+        <WingBlank size="lg">
+          <p className="sub-title">Disabled slider</p>
+          <Slider
+            style={{ marginLeft: 30, marginRight: 30 }}
+            defaultValue={26}
+            min={0}
+            max={30}
+            disabled
+            onChange={this.log('change')}
+            onAfterChange={this.log('afterChange')}
+          />
+        </WingBlank>
+        <WhiteSpace size="lg" />
+        <WingBlank size="lg">
+          <p className="sub-title">Slider with customized color</p>
+          <Slider
+            style={{ marginLeft: 30, marginRight: 30 }}
+            defaultValue={26}
+            min={0}
+            max={30}
+            trackStyle={{
+              backgroundColor: 'red',
+              height: '5px',
+            }}
+            railStyle={{
+              backgroundColor: 'blue',
+              height: '5px',
+            }}
+            handleStyle={{
+              borderColor: 'blue',
+              height: '14px',
+              width: '14px',
+              marginLeft: '-7px',
+              marginTop: '-4.5px',
+              backgroundColor: 'blue',
+            }}
+          />
+        </WingBlank>
+      </div>
     );
   }
 }
