@@ -3,6 +3,8 @@ const {
   getLoader
 } = require('react-app-rewired');
 
+const pxtorem = require('postcss-pxtorem');
+
 const fileLoaderMatcher = function(rule) {
   return rule.loader && rule.loader.indexOf(`file-loader`) != -1;
 }
@@ -36,7 +38,7 @@ module.exports = function override(config, env) {
                 'not ie < 9', // React doesn't support IE8 anyway
               ],
               flexbox: 'no-2009',
-            }),
+            })
           ],
         },
       }, {
@@ -44,6 +46,7 @@ module.exports = function override(config, env) {
         options: {
           // theme vars, also can use theme.js instead of this.
           modifyVars: {
+            "@hd": "2px",
             "@brand-primary": "#1DA57A"
           },
         },
@@ -79,7 +82,7 @@ module.exports = function override(config, env) {
                 'not ie < 9', // React doesn't support IE8 anyway
               ],
               flexbox: 'no-2009',
-            }),
+            })
           ],
         },
       },

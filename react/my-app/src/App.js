@@ -15,7 +15,7 @@ class App extends Component {
 
   state = {
     data: ['1', '2', '3'],
-    imgHeight: 176,
+    imgHeight: 374,
   }
 
   componentDidMount() {
@@ -36,7 +36,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <WingBlank></WingBlank>
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">Welcome to React</h1>
+        </div>
         <Carousel
           autoplay={false}
           infinite
@@ -49,8 +52,6 @@ class App extends Component {
               href="http://www.alipay.com"
               style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
             >
-              <img src={logo} className="App-logo" alt="logo" />
-              <h1 className="App-title">Welcome to React</h1>
             </a>
           ))}
         </Carousel>

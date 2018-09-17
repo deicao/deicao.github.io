@@ -18,6 +18,10 @@
       }
     }
   },
+  "theme": {
+    "brand-primary": "red",
+    "color-text-base": "#333"
+  },
   "dependencies": {
     "antd-mobile": "^2.2.5",
     "react": "^16.5.1",
@@ -34,6 +38,9 @@
     "babel-plugin-import": "^1.8.0",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-px2rem": "^0.3.0",
+    "postcss-pxtorem": "^3.3.1",
     "react-app-rewired": "^1.6.2"
   }
 }
