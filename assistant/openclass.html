@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="js/resize.js"></script>
+  <link href="https://cdn.bootcss.com/video.js/7.5.4/alt/video-js-cdn.min.css" rel="stylesheet">
+  <title></title>
+  <style>
+    * { margin: 0; padding: 0; }
+    html, body { width: 100%;max-width:750px;margin:0 auto;background: #f5f5f5;line-height: 0;-webkit-overflow-scrolling: touch;font: 12px/1.5 "Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB",\5FAE\8F6F\96C5\9ED1,tahoma,simsun,sans-serif; }
+    table { border-collapse: collapse; }
+    a { text-decoration: none;display: inline-block;color: #333; }
+    i { font-style: normal; }
+    ul li { list-style: none; }
+    * { -webkit-tap-highlight-color: rgba(0, 0, 0, 0);-moz-tap-highlight-color: rgba(0, 0, 0, 0);-ms-tap-highlight-color: rgba(0, 0, 0, 0);-o-tap-highlight-color: rgba(0, 0, 0, 0);tap-highlight-color: rgba(0, 0, 0, 0); }
+    .clearfix:after { content: ".";display: block;height: 0;clear: both;visibility: hidden; }
+    .video { position: relative; }
+    #example_video_1, .video, .video-mask {
+      width: 100%;
+      height: 4.2rem;
+    }
+    .video-js .vjs-big-play-button {
+      border: 0;
+      z-index: 2;
+      background-color: rgba(0, 0, 0, 0);
+    }
+  
+    .video-js .vjs-big-play-button .vjs-icon-placeholder:before, .video-js .vjs-play-control .vjs-icon-placeholder:before, .vjs-icon-play:before {
+      content: "";
+    }
+    
+    .video-mask {
+      left: 0;
+      top: 0;
+      z-index: 0;
+      display: flex;
+      position: absolute;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-color: rgba(0, 0, 0, .2);
+    }
+
+    .video-ply-num {
+      height: .76rem;
+      color: #eee;
+      font-size: .26rem;
+      line-height: .76rem;
+      padding-left: .3rem;
+      background:rgba(0, 0, 0, .6);
+    }
+  
+    .video-js .vjs-big-play-button {
+      width: 1.2rem;
+      height: 1.2rem;
+      top: 50%;
+      left: 50%;
+      background-image: url('https://shihan-image.oss-cn-hangzhou.aliyuncs.com/upload_dev/h5/other/play_video_icon.png');
+      background-size: 100%;
+      transform: translate(-50%, -50%);
+    }
+
+    .video-info {
+      padding: .32rem .24rem .26rem .28rem;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    .video-name {
+      color: #000;
+      font-size: .32rem;
+      line-height: .32rem;
+      font-weight: normal;
+      padding-bottom: .15rem;
+    }
+
+    .video-subname {
+      color: #666;
+      font-size: .28rem;
+      line-height: .42rem;
+    }
+
+    .tab {
+      height: .9rem;
+      margin-top: .24rem;
+      background: #fff;
+      border-bottom: .01rem solid #eee;
+    }
+
+    .tab li {
+      width: 33.33%;
+      height: .9rem;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .tab span {
+      color: #333;
+      font-size: .32rem;
+      line-height: .9rem;
+      position: relative;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .tab li.active span {
+      color: #CD363D;
+    }
+
+    .tab li.active span::before {
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: .04rem;
+      content: '';
+      position: absolute;
+      background:#CD363D;
+      border-radius: .02rem;
+    }
+
+    .catalog-list ul, .comment-list ul {
+      padding: 0 .3rem;
+      background: #fff;
+    }
+
+    .catalog-list li {
+      padding: .26rem 0;
+      display: flex;
+      justify-content: flex-start;
+      border-bottom: .01rem solid #eee;
+    }
+
+    .catalog-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .catalog-list .play-icon {
+      width: .74rem;
+    }
+    
+    .catalog-list .play-icon::before {
+      content: '';
+      width: .5rem;
+      height: .5rem;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      border: .06rem solid #ddd;
+    }
+
+    .catalog-item-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .catalog-item-info-name {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .catalog-item-info-name span {
+      color: #ddd;
+      width: .52rem;
+      font-size: .36rem;
+      line-height: .46rem;
+    }
+
+    .catalog-item-info-name p {
+      color: #333;
+      width: 5.52rem;
+      font-size: .32rem;
+      line-height: .46rem;
+    }
+
+    .catalog-item-info-time {
+      color: #999;
+      font-size: .26rem;
+      line-height: .26rem;
+      padding-left: .52rem;
+    }
+
+    .load-tip {
+      height: .9rem;
+      color: #ccc;
+      font-size: .26rem;
+      line-height: .9rem;
+      text-align: center;
+    }
+
+    .comment-list .title {
+      height: .88rem;
+      color: #ccc;
+      font-size: .3rem;
+      line-height: .88rem;
+      padding-left: .44rem;
+      position: relative;
+      background: #fff;
+      border-bottom: .01rem solid #eee;
+    }
+
+    .comment-list .title::before {
+      content: '';
+      top: .32rem;
+      left: .3rem;
+      width: .02rem;
+      height: .24rem;
+      position: absolute;
+      background: #CD363D;
+    }
+
+    .comment-list-item {
+      border-bottom: .01rem solid #eee;
+    }
+
+    .comment-list-item:last-child {
+      border-bottom: 0;
+    }
+
+    .comment-list .user-info {
+      height: .6rem;
+      display: flex;
+      padding: .3rem 0 .25rem;
+      justify-content: space-between;
+    }
+
+    .user-head-img {
+      width: .6rem;
+      height: .6rem;
+      border-radius: 50%;
+    }
+
+    .operate-btn span {
+      color: #999;
+      height: .6rem;
+      font-size: .28rem;
+      line-height: .6rem;
+      padding-left: .42rem;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .operate-btn span:first-child {
+      margin-right: .46rem;
+    }
+
+    .user-comment {
+      color: #333;
+      font-size: .28rem;
+      line-height: .42rem;
+    }
+
+    .release-time {
+      color: #999;
+      height: .7rem;
+      font-size: .24rem;
+      line-height: .7rem;
+    }
+
+    .other-replay-content {
+      position: relative;
+      margin-top: .18rem;
+      overflow: hidden;
+    }
+
+    .comment-list ul.other-replay {
+      width: 6.5rem;
+      max-height: 1.86rem;
+      padding: .2rem;
+      margin-top: .18rem;
+      overflow: hidden;
+      position: relative;
+      background: #f8f8f8;
+    }
+
+    .comment-list ul.other-replay.active {
+      max-height: none;
+    }
+
+    .other-replay li {
+      margin-bottom: .08rem;
+      text-align: justify;
+    }
+
+    .other-replay li:last-child {
+      margin-bottom: 0;
+    }
+
+    .other-replay, .look-other {
+      color: #333;
+      font-size: .28rem;
+      line-height: .42rem;
+    }
+
+    .other-replay span {
+      color: #316FA8;
+    }
+
+    .other-replay li.look-other {
+      width: 6.7rem;
+      left: 0;
+      bottom: 0;
+      color: #316FA8;
+      position: absolute;
+      background: #f8f8f8;
+      padding: .1rem 0 .2rem .2rem;
+      margin-bottom: 0;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <template v-if="show_loading">
+      <div class="loading"></div>
+    </template>
+    <template v-else>
+      <div class="video">
+        <video id="example_video_1" class="video-js vjs-default-skin" width="100%" preload data-setup="{}" controls playsinline webkit-playsinline>
+          <source :src="video_detail.sh_video_url" type='video/mp4' />
+        </video>
+        <div class="video-mask">
+          <p class="video-ply-num">播放次数: {{video_detail.sh_video_play_num}}次</p>
+        </div>
+      </div>
+      <div class="video-info">
+        <h5 class="video-name">{{video_detail.sh_title}}</h5>
+        <p class="video-subname">{{video_detail.sh_content}}</p>
+      </div>
+      <ul class="tab">
+        <li v-for="(item, index) in tabs" v-bind:class="{ active: index == currentIndex }" @click='changeTab(index)'><span>{{item}}</span></li>
+      </ul>
+      <div class="catalog-list" v-if="currentIndex == 0">
+        <ul>
+          <li v-for="(item, index) in video_detail.sh_catalog">
+            <div class="play-icon"></div>
+            <div class="catalog-item-info">
+              <div class="catalog-item-info-name"><span><template v-if="index < 10">0{{index+1}}</template><template v-else>{{index+1}}</template></span><p>{{item.sh_name}}</p></div>
+              <p class="catalog-item-info-time">{{item.sh_time}}</p>
+            </div>
+          </li>
+        </ul>
+        <p class="load-tip">没有更多了~</p>
+      </div>
+      <div class="video-detail" v-if="currentIndex == 1"></div>
+      <div class="comment-list" v-if="currentIndex == 2">
+        <h5 class="title">课程评价</h5>
+        <ul>
+          <li class="comment-list-item" v-for="(item, index) in video_detail.sh_comment">
+            <div class="user-info">
+              <img :src="item.sh_headimgurl" class="user-head-img" alt="">
+              <div class="operate-btn">
+                <span>{{item.sh_praise_num}}</span>
+                <span>{{item.sh_praise_num}}</span>
+              </div>
+            </div>
+            <div class="user-comment">{{item.sh_detail}}</div>
+            <ul class="other-replay" v-bind:class="{ active: item.sh_has_fold == 1 }" v-if="item.sh_reply_arr.length > 0">
+              <li v-for="(reply, replyIndex) in item.sh_reply_arr">
+                <span class="name">{{reply.sh_reply_name}}</span>: {{reply.sh_reply_detail}}
+              </li>
+              <li class="look-other" v-if="item.sh_reply_arr.length > 2" @click='lookMore(index)'>
+                <template v-if="item.sh_has_fold == 1">收起回复</template>
+                <template v-else>查看其它{{item.sh_reply_arr.length - 2}}条回复</template>
+              </li>
+            </ul>
+            <div class="release-time">{{item.sh_create_time}}</div>
+          </li>
+        </ul>
+        <p class="load-tip">没有更多了~</p>
+      </div>
+    </template>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+  <script src="https://cdn.bootcss.com/video.js/7.5.4/video.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
+  <script type="text/javascript">
+      var vm = new Vue({
+        el: '#app',
+        data () {
+          return {
+            tabs: ['目录', '详情', '评论'],
+            video_detail: '',
+            currentIndex: 0,
+            show_loading: true
+          }
+        },
+        created: function () {
+          var id = this.GetQueryString('id');
+          this.getClassDetail(id);
+        },
+        mounted:function () {
+          
+        },
+        methods: {
+          getClassDetail: function(id) {
+            var that = this;
+            $.ajax({
+              type: 'POST',
+              url: 'https://api-test.shihanbainian.com/1/agent/material_video_detail', // league_id 目录的ID
+              data: {
+                'id': id
+              },
+              success: function (res) {
+                that.show_loading = false;
+                that.video_detail = {
+                  sh_title: '如何发朋友圈吸引人',
+                  sh_content: '顶尖金牌讲师教你如何打造微商包括，组你圆梦高级创业团队，打造核心竞争力。',
+                  sh_video_url: 'https://aliyun.shihanbainian.com/2b0ad365116e4f48ae6c09c82c9e71bc/3bd65cf02b894ef5844420c7c1571441-1a81f4641f36ef6f090202e27ef5f7dd-sd.mp4',
+                  sh_video_play_num: '190.7万',
+                  sh_catalog: [
+                    {
+                      sh_name: '多发送朋友圈 如何吸引精准用户',
+                      sh_time: '15分钟'
+                    },
+                    {
+                      sh_name: '多发送朋友圈 如何吸引精准用户',
+                      sh_time: '15分钟'
+                    },
+                    {
+                      sh_name: '多发送朋友圈 如何吸引精准用户多发送朋友圈 如何吸引精准用户',
+                      sh_time: '15分钟'
+                    }
+                  ],
+                  sh_comment: [
+                    {
+                      sh_detail: '自学三个月，全部都是在公开课上看的免费视频，我还会一直在这里学习新的内容的，大家一起加油啊。自学三个月，全部都是在公开课上看的免费视频',
+                      sh_headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83erAc5uPNwzdAYJFHz1V91snd1AQGnRVHqNe0BHVNFL8dhIksiaqibicAqxwAowRQibXkIsJLZgO3BNlCw/132',
+                      sh_nick_name: '星空下的璀璨',
+                      sh_praise_num: '5',
+                      sh_create_time: '2019-4-11 16:03:32',
+                      sh_has_fold: 0,
+                      sh_reply_arr: []
+                    },
+                    {
+                      sh_detail: '自学三个月，全部都是在公开课上看的免费视频，我还会一直在这里学习新的内容的，大家一起加油啊。自学三个月，全部都是在公开课上看的免费视频',
+                      sh_headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83erAc5uPNwzdAYJFHz1V91snd1AQGnRVHqNe0BHVNFL8dhIksiaqibicAqxwAowRQibXkIsJLZgO3BNlCw/132',
+                      sh_nick_name: '星空下的璀璨',
+                      sh_praise_num: '2',
+                      sh_create_time: '2019-4-11 16:03:32',
+                      sh_has_fold: 0,
+                      sh_reply_arr: [
+                        {
+                          sh_reply_detail: '是的超级详细，经常下班后就看课程',
+                          sh_reply_name: '离歌4856'
+                        },
+                        {
+                          sh_reply_detail: '羡慕你们这么努力上进，我天天下班就是追剧刷抖音哈哈',
+                          sh_reply_name: '原来你还在这里啊'
+                        },
+                        {
+                          sh_reply_detail: '是的超级详细，经常下班后就看课程',
+                          sh_reply_name: '离歌4856'
+                        },
+                        {
+                          sh_reply_detail: '羡慕你们这么努力上进，我天天下班就是追剧刷抖音哈哈',
+                          sh_reply_name: '原来你还在这里啊'
+                        },
+                        {
+                          sh_reply_detail: '是的超级详细，经常下班后就看课程',
+                          sh_reply_name: '离歌4856'
+                        },
+                        {
+                          sh_reply_detail: '羡慕你们这么努力上进，我天天下班就是追剧刷抖音哈哈',
+                          sh_reply_name: '原来你还在这里啊'
+                        },
+                        {
+                          sh_reply_detail: '是的超级详细，经常下班后就看课程',
+                          sh_reply_name: '离歌4856'
+                        },
+                        {
+                          sh_reply_detail: '羡慕你们这么努力上进，我天天下班就是追剧刷抖音哈哈',
+                          sh_reply_name: '原来你还在这里啊'
+                        },
+                        {
+                          sh_reply_detail: '是的超级详细，经常下班后就看课程',
+                          sh_reply_name: '离歌4856'
+                        },
+                        {
+                          sh_reply_detail: '羡慕你们这么努力上进，我天天下班就是追剧刷抖音哈哈',
+                          sh_reply_name: '原来你还在这里啊'
+                        }
+                      ]
+                    },
+                    {
+                      sh_detail: '自学三个月，全部都是在公开课上看的免费视频，我还会一直在这里学习新的内容的，大家一起加油啊。自学三个月，全部都是在公开课上看的免费视频',
+                      sh_headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83erAc5uPNwzdAYJFHz1V91snd1AQGnRVHqNe0BHVNFL8dhIksiaqibicAqxwAowRQibXkIsJLZgO3BNlCw/132',
+                      sh_nick_name: '星空下的璀璨',
+                      sh_praise_num: '2',
+                      sh_create_time: '2019-4-11 16:03:32',
+                      sh_has_fold: 0,
+                      sh_reply_arr: [
+                        {
+                          sh_reply_detail: '是的超级详细，经常下班后就看课程',
+                          sh_reply_name: '离歌4856'
+                        },
+                        {
+                          sh_reply_detail: '羡慕你们这么努力上进，我天天下班就是追剧刷抖音哈哈',
+                          sh_reply_name: '原来你还在这里啊'
+                        }
+                      ]
+                    }
+                  ],
+                };
+                $('title').html(that.video_detail.sh_title);
+                that.$nextTick(function() {
+                  var player = videojs("example_video_1", {}, function onPlayerReady() {
+                    this.currentTime(2);
+                    this.on('play', function() {
+                      $('.video-mask').fadeOut();
+                    });
+                  });
+                })
+              }
+            });
+          },
+          changeTab: function(index) {
+            this.currentIndex = index;
+          },
+          lookMore: function(index) {
+            var has_fold = Number(this.video_detail.sh_comment[index].sh_has_fold);
+
+            this.video_detail.sh_comment[index].sh_has_fold = Number(!has_fold);
+          },
+          GetQueryString: function(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+          }
+        }
+      });
+  </script>
+</body>
+</html>
