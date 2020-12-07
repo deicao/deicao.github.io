@@ -30,7 +30,34 @@
 </head>
 
 <body>
+  <div id="live2d-widget" class="live2d-widget-container" style="position: fixed; left: -50px; bottom: -35px; width: 250px; height: 400px; z-index: 99999; opacity: 0.7; pointer-events: none;">
+    <div class="live2d-widget-dialog-container" style="transform: scale(1);">
+      <div class="live2d-widget-dialog"></div>
+    </div>
+    <canvas id="live2dcanvas" width="500" height="800" style="position: absolute; left: 0px; top: 0px; width: 250px; height: 400px;"></canvas>
+  </div>
   <canvas id="c" height="500" width="500"></canvas>
+  <script src="https://hsianglee.cn/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script>
+  <script>
+    L2Dwidget.init({
+      pluginModelPath: "assets/",
+      react:{opacity:.7},
+      debug:!1,
+      model:{
+        jsonPath: {"version":"Sample 1.0.0","model":"moc/miku.moc","textures":["moc/miku.2048/texture_00.png"],"motions":{"null":[{"file":"mtn/miku_m_01.mtn"},{"file":"mtn/miku_m_02.mtn"},{"file":"mtn/miku_m_03.mtn"},{"file":"mtn/miku_m_04.mtn"},{"file":"mtn/miku_m_05.mtn"},{"file":"mtn/miku_m_06.mtn"},{"file":"mtn/miku_shake_01.mtn"}],"idle":[{"file":"mtn/miku_idle_01.mtn"}]},"physics":"miku.physics.json"}
+      },
+      display:{superSample:2,position:"left",width:250,height:400,hOffset:-50,vOffset:-35},
+      mobile:{show:!0,scale:.8},
+      dialog:{
+        enable:!0,
+        script:{"every idle 15s":"$hitokoto$","hover .brand":"终于等到你 (*/ω＼*)","hover .sidebar-toggle":"又在偷看我信息了^^","tap body":"哎呀！别碰我！,","tap face":"人家已经不是小孩子了！"}
+      },
+      log:!1,
+      pluginJsPath:"lib/",
+      pluginRootPath:"live2dw/",
+      tagMode:!1
+    })
+  </script>
   <script>
     var s = c.width = c.height = 500
       , ctx = c.getContext('2d')
